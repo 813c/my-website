@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ダミー株式会社</title>
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --orange: #e8881a;
+      --orange-light: #f5a623;
+      --cream: #fdf8f0;
+      --cream2: #f9f3e8;
+      --navy: #1a237e;
+      --gray: #666;
+      --white: #fff;
+    }
+
+    body {
+      font-family: 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', 'Meiryo', sans-serif;
+      background: var(--cream);
+      color: #333;
+    }
+
+    /* ========== ヘッダー & ナビ ========== */
+    header {
+      background: var(--white);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .header-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+      height: 70px;
+    }
+
+    .logo {
+      font-size: 22px;
+      font-weight: 800;
+      color: var(--orange);
+      letter-spacing: 2px;
+      text-decoration: none;
+    }
+
+    .logo span {
+      display: block;
+      font-size: 10px;
+      color: var(--gray);
+      font-weight: 400;
+      letter-spacing: 1px;
+      margin-top: -2px;
+    }
+
+    nav.main-nav {
+      display: flex;
+      align-items: stretch;
+      height: 100%;
+    }
+
+    nav.main-nav a {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 20px;
+      text-decoration: none;
+      color: var(--navy);
+      font-size: 13px;
+      font-weight: 600;
+      border-bottom: 3px solid transparent;
+      transition: all 0.2s;
+    }
+
+    nav.main-nav a:hover,
+    nav.main-nav a.active {
+      color: var(--orange);
+      border-bottom: 3px solid var(--orange);
+      background: #fff8f0;
+    }
+
+    .hamburger {
+      display: none;
+      background: none;
+      border: none;
+      font-size: 26px;
+      cursor: pointer;
+      color: var(--orange);
+    }
+
+    /* ========== ヒーロー ========== */
+    .hero {
+      position: relative;
+      overflow: hidden;
+      min-height: 560px;
+      display: flex;
+      align-items: flex-end;
+      background: url('store_hero.jpg') center center / cover no-repeat;
+    }
+
+    .hero-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0.1) 60%, transparent 100%);
+    }
+
+    .hero-text-box {
+      position: relative;
+      z-index: 1;
+      max-width: 1200px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 56px 40px;
+    }
+
+    .hero-text-box h1 {
+      font-size: 48px;
+      font-weight: 900;
+      color: #fff;
+      line-height: 1.2;
+      margin-bottom: 14px;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.4);
+    }
+
+    .hero-text-box p {
+      font-size: 16px;
+      color: rgba(255,255,255,0.88);
+      line-height: 1.8;
+      margin-bottom: 28px;
+      text-shadow: 0 1px 4px rgba(0,0,0,0.4);
+    }
+
+    .hero-text-box .btn {
+      display: inline-block;
+      background: #e8501a;
+      color: #fff;
+      padding: 14px 32px;
+      border-radius: 30px;
+      font-size: 15px;
+      font-weight: 800;
+      text-decoration: none;
+      box-shadow: 0 4px 16px rgba(232,80,26,0.5);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .hero-text-box .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(232,80,26,0.6);
+    }
+
+    /* ========== セクション共通 ========== */
+    section { padding: 70px 24px; }
+    .container { max-width: 1200px; margin: 0 auto; }
+    .section-header { text-align: center; margin-bottom: 48px; }
+
+    .section-header .label {
+      display: inline-block;
+      color: var(--orange);
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    .section-header h2 { font-size: 30px; font-weight: 800; color: #333; margin-bottom: 12px; }
+    .section-header p { color: var(--gray); font-size: 14px; line-height: 1.8; }
+
+    /* ========== 商品グリッド ========== */
+    #products { background: var(--cream2); }
+
+    .products-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+
+    .product-card {
+      background: var(--white);
+      border-radius: 20px;
+      padding: 24px 20px 20px;
+      text-align: center;
+      position: relative;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .product-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+    }
+
+    .product-card .new-badge {
+      position: absolute;
+      top: 14px; right: 14px;
+      background: var(--orange);
+      color: #fff;
+      font-size: 11px;
+      font-weight: 800;
+      padding: 4px 10px;
+      border-radius: 12px;
+    }
+
+    .product-img {
+      width: 100%;
+      max-width: 200px;
+      aspect-ratio: 1;
+      margin: 0 auto 20px;
+      border-radius: 50%;
+      overflow: hidden;
+      background: #f5e8d0;
+    }
+
+    .product-img img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .product-card h3 { font-size: 17px; font-weight: 800; color: #333; margin-bottom: 6px; }
+    .product-card .price { font-size: 18px; font-weight: 800; color: var(--orange); margin-top: 6px; }
+
+    /* ========== オープン ========== */
+    #open { background: var(--white); }
+
+    .open-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 48px;
+      align-items: center;
+    }
+
+    .open-text h3 { font-size: 24px; font-weight: 800; color: #333; margin-bottom: 12px; }
+    .open-text p { color: var(--gray); font-size: 14px; line-height: 1.9; margin-bottom: 20px; }
+
+    .open-text .tagline {
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--orange);
+      font-style: italic;
+      border-left: 4px solid var(--orange);
+      padding-left: 14px;
+      margin-bottom: 20px;
+    }
+
+    /* ========== 人気コロッケ４選 ========== */
+    #kfood { background: var(--white); }
+
+    .kfood-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+    }
+
+    .kfood-card {
+      background: var(--cream);
+      border-radius: 14px;
+      padding: 20px 14px;
+      text-align: center;
+      border: 1px solid #f0e4d0;
+      transition: box-shadow 0.2s;
+    }
+
+    .kfood-card:hover { box-shadow: 0 4px 16px rgba(232,136,26,0.15); }
+
+    .kfood-card .icon-wrap {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      overflow: hidden;
+      margin: 0 auto 12px;
+    }
+
+    .kfood-card .icon-wrap img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .kfood-card h4 { font-size: 14px; font-weight: 700; color: #333; margin-bottom: 4px; }
+    .kfood-card p { font-size: 12px; color: var(--gray); }
+
+    /* ========== ブログ ========== */
+    .blog-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 28px;
+    }
+
+    .blog-card {
+      background: var(--white);
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .blog-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+    }
+
+    .blog-img {
+      position: relative;
+      aspect-ratio: 16/9;
+      overflow: hidden;
+    }
+
+    .blog-img img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.3s;
+    }
+
+    .blog-card:hover .blog-img img { transform: scale(1.04); }
+
+    .blog-cat {
+      position: absolute;
+      top: 12px; left: 12px;
+      background: var(--orange);
+      color: #fff;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 20px;
+    }
+
+    .blog-body { padding: 20px; }
+    .blog-date { font-size: 12px; color: #999; display: block; margin-bottom: 8px; }
+    .blog-title { font-size: 15px; font-weight: 700; color: #333; line-height: 1.5; margin-bottom: 10px; }
+    .blog-excerpt { font-size: 13px; color: var(--gray); line-height: 1.7; margin-bottom: 14px; }
+    .blog-more { font-size: 13px; color: var(--orange); font-weight: 700; text-decoration: none; }
+    .blog-more:hover { opacity: 0.7; }
+
+    .btn-outline {
+      display: inline-block;
+      border: 2px solid var(--orange);
+      color: var(--orange);
+      padding: 12px 32px;
+      border-radius: 30px;
+      font-size: 14px;
+      font-weight: 700;
+      text-decoration: none;
+      transition: background 0.2s, color 0.2s;
+    }
+
+    .btn-outline:hover { background: var(--orange); color: #fff; }
+
+    /* ========== 会社概要 ========== */
+    #company { background: var(--cream2); }
+
+    .company-table {
+      width: 100%;
+      max-width: 720px;
+      margin: 0 auto;
+      border-collapse: collapse;
+      background: var(--white);
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 2px 16px rgba(0,0,0,0.06);
+    }
+
+    .company-table tr:not(:last-child) td,
+    .company-table tr:not(:last-child) th { border-bottom: 1px solid #f0e8dc; }
+
+    .company-table th {
+      background: #fff8f0;
+      color: var(--orange);
+      font-size: 13px;
+      font-weight: 700;
+      padding: 16px 24px;
+      text-align: left;
+      width: 180px;
+    }
+
+    .company-table td { padding: 16px 24px; font-size: 14px; color: #444; }
+
+    /* ========== フッター ========== */
+    footer { background: #222; color: #aaa; padding: 40px 24px 24px; }
+
+    .footer-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 32px;
+      flex-wrap: wrap;
+      padding-bottom: 32px;
+      border-bottom: 1px solid #333;
+    }
+
+    .footer-logo { font-size: 22px; font-weight: 800; color: var(--orange); margin-bottom: 8px; }
+    .footer-info p { font-size: 12px; line-height: 1.8; }
+    .footer-links { display: flex; flex-direction: column; gap: 8px; }
+    .footer-links a { color: #aaa; text-decoration: none; font-size: 13px; transition: color 0.2s; }
+    .footer-links a:hover { color: var(--orange); }
+    .footer-copy { max-width: 1200px; margin: 20px auto 0; text-align: center; font-size: 11px; color: #555; }
+
+    /* ========== レスポンシブ ========== */
+    @media (max-width: 900px) {
+      nav.main-nav { display: none; }
+      .hamburger { display: block; }
+
+      nav.main-nav.open {
+        display: flex;
+        flex-direction: column;
+        position: fixed;
+        top: 70px; left: 0; right: 0;
+        background: var(--white);
+        box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+        z-index: 99;
+        padding: 8px 0;
+      }
+
+      nav.main-nav.open a {
+        padding: 14px 24px;
+        border-bottom: 1px solid #f0e8dc;
+        border-left: 3px solid transparent;
+        justify-content: flex-start;
+      }
+
+      nav.main-nav.open a:hover,
+      nav.main-nav.open a.active {
+        border-left: 3px solid var(--orange);
+        border-bottom-color: transparent;
+      }
+
+      .hero { min-height: 380px; }
+      .hero-text-box { padding: 36px 20px; }
+      .hero-text-box h1 { font-size: 30px; }
+      .products-grid { grid-template-columns: repeat(2, 1fr); }
+      .open-grid { grid-template-columns: 1fr; }
+      .kfood-grid { grid-template-columns: repeat(2, 1fr); }
+      .blog-grid { grid-template-columns: 1fr; }
+      .footer-inner { flex-direction: column; }
+    }
+
+    @media (max-width: 520px) {
+      .products-grid { grid-template-columns: 1fr; }
+      section { padding: 48px 16px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ヘッダー -->
+<header>
+  <div class="header-inner">
+    <a href="#" class="logo">ダミー株式会社<span>DUMMY CO., LTD.</span></a>
+    <nav class="main-nav" id="mainNav">
+      <a href="#" class="active">メニューはいる</a>
+      <a href="#company">会社概要</a>
+      <a href="#open">メニューはいる</a>
+      <a href="#products">メニューはいる</a>
+      <a href="#kfood">メニューはいる</a>
+      <a href="#">メニューはいる</a>
+    </nav>
+    <button class="hamburger" id="hamburger" aria-label="メニュー">☰</button>
+  </div>
+</header>
+
+<!-- ヒーロー -->
+<section class="hero" id="home">
+  <div class="hero-overlay"></div>
+  <div class="hero-text-box">
+    <h1>コロッケ専門店</h1>
+    <p>ダミーテキストです。お店のキャッチコピーや紹介文をここに記載します。</p>
+    <a href="#products" class="btn">商品を見る →</a>
+  </div>
+</section>
+
+<!-- 商品ラインナップ -->
+<section id="products">
+  <div class="container">
+    <div class="section-header">
+      <span class="label">店名はダミーです</span>
+      <h2>人気のコロッケラインナップ</h2>
+      <p>本場韓国の味をそのまま。多彩なフィリングが楽しめます。</p>
+    </div>
+    <div class="products-grid">
+      <div class="product-card">
+        <div class="product-img"><img src="626828731113799751.jpg" alt="ダミーコロッケ①"></div>
+        <h3>ダミーコロッケ①</h3><div class="price">350円</div>
+      </div>
+      <div class="product-card">
+        <div class="product-img"><img src="626828733780590704.jpg" alt="ダミーコロッケ②"></div>
+        <h3>ダミーコロッケ②</h3><div class="price">350円</div>
+      </div>
+      <div class="product-card">
+        <div class="product-img"><img src="626828734217584644.jpg" alt="ダミーコロッケ③"></div>
+        <h3>ダミーコロッケ③</h3><div class="price">350円</div>
+      </div>
+      <div class="product-card">
+        <div class="product-img"><img src="626828735424757854.jpg" alt="ダミーコロッケ④"></div>
+        <h3>ダミーコロッケ④</h3><div class="price">350円</div>
+      </div>
+      <div class="product-card">
+        <span class="new-badge">NEW</span>
+        <div class="product-img"><img src="626828735508644470.jpg" alt="ダミーコロッケ⑤"></div>
+        <h3>ダミーコロッケ⑤</h3><div class="price">350円</div>
+      </div>
+      <div class="product-card">
+        <div class="product-img"><img src="626829375156781586.jpg" alt="ダミーコロッケ⑥"></div>
+        <h3>ダミーコロッケ⑥</h3><div class="price">350円</div>
+      </div>
+      <div class="product-card">
+        <span class="new-badge">NEW</span>
+        <div class="product-img"><img src="626828731113799751.jpg" alt="ダミーコロッケ⑦"></div>
+        <h3>ダミーコロッケ⑦</h3><div class="price">350円</div>
+      </div>
+      <div class="product-card">
+        <span class="new-badge">NEW</span>
+        <div class="product-img"><img src="626828733780590704.jpg" alt="ダミーコロッケ⑧"></div>
+        <h3>ダミーコロッケ⑧</h3><div class="price">350円</div>
+      </div>
+      <div class="product-card">
+        <span class="new-badge">NEW</span>
+        <div class="product-img"><img src="626828734217584644.jpg" alt="ダミーコロッケ⑨"></div>
+        <h3>ダミーコロッケ⑨</h3><div class="price">350円</div>
+      </div>
+      <div class="product-card">
+        <span class="new-badge">NEW</span>
+        <div class="product-img"><img src="626828735424757854.jpg" alt="ダミーコロッケ⑩"></div>
+        <h3>ダミーコロッケ⑩</h3><div class="price">350円</div>
+      </div>
+      <div class="product-card">
+        <span class="new-badge">NEW</span>
+        <div class="product-img"><img src="626828735508644470.jpg" alt="ダミーコロッケ⑪"></div>
+        <h3>ダミーコロッケ⑪</h3><div class="price">350円</div>
+      </div>
+      <div class="product-card">
+        <span class="new-badge">NEW</span>
+        <div class="product-img"><img src="626829375156781586.jpg" alt="ダミーコロッケ⑫"></div>
+        <h3>ダミーコロッケ⑫</h3><div class="price">350円</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- オープン -->
+<section id="open">
+  <div class="container">
+    <div class="section-header">
+      <span class="label">OPEN</span>
+      <h2>店舗・オープン情報</h2>
+    </div>
+    <div class="open-grid">
+      <div class="open-text">
+        <p class="tagline">"Based on Years of Experience"</p>
+        <h3>コロッケ専門店</h3>
+        <p>ダミーテキストです。ここにお店の説明文が入ります。商品やサービスについての詳細をご記入ください。</p>
+        <p>ダミーテキストです。業務用・小売用など対応範囲についての説明をここに記載します。</p>
+      </div>
+      <div>
+        <img src="store_hero.jpg" alt="店舗内観" style="width:100%; border-radius:16px; display:block;">
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 人気コロッケ４選 -->
+<section id="kfood">
+  <div class="container">
+    <div class="section-header">
+      <span class="label">POPULAR</span>
+      <h2>人気コロッケ４選</h2>
+      <p>ダミーテキストです。人気商品のご紹介説明をここに記載します。</p>
+    </div>
+    <div class="kfood-grid">
+      <div class="kfood-card">
+        <div class="icon-wrap"><img src="626828731113799751.jpg" alt="ダミーコロッケ①"></div>
+        <h4>ダミーコロッケ①</h4><p>ダミーテキストが入ります</p>
+      </div>
+      <div class="kfood-card">
+        <div class="icon-wrap"><img src="626828733780590704.jpg" alt="ダミーコロッケ②"></div>
+        <h4>ダミーコロッケ②</h4><p>ダミーテキストが入ります</p>
+      </div>
+      <div class="kfood-card">
+        <div class="icon-wrap"><img src="626828734217584644.jpg" alt="ダミーコロッケ③"></div>
+        <h4>ダミーコロッケ③</h4><p>ダミーテキストが入ります</p>
+      </div>
+      <div class="kfood-card">
+        <div class="icon-wrap"><img src="626828735424757854.jpg" alt="ダミーコロッケ④"></div>
+        <h4>ダミーコロッケ④</h4><p>ダミーテキストが入ります</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ブログ記事 -->
+<section id="blog" style="background: var(--cream2);">
+  <div class="container">
+    <div class="section-header">
+      <span class="label">NEWS &amp; BLOG</span>
+      <h2>新着情報・ブログ</h2>
+      <p>ダミーテキストです。最新情報やお知らせをここに掲載します。</p>
+    </div>
+    <div class="blog-grid">
+      <article class="blog-card">
+        <div class="blog-img">
+          <img src="626828731113799751.jpg" alt="ブログ記事1">
+          <span class="blog-cat">お知らせ</span>
+        </div>
+        <div class="blog-body">
+          <time class="blog-date">2026.08.15</time>
+          <h3 class="blog-title">ダミータイトルが入ります。記事の見出しをここに書きます</h3>
+          <p class="blog-excerpt">ダミーテキストです。ブログ記事の概要文をここに記載します。内容の要約が表示されます。</p>
+          <a href="#" class="blog-more">続きを読む →</a>
+        </div>
+      </article>
+      <article class="blog-card">
+        <div class="blog-img">
+          <img src="626828733780590704.jpg" alt="ブログ記事2">
+          <span class="blog-cat">新商品</span>
+        </div>
+        <div class="blog-body">
+          <time class="blog-date">2026.08.10</time>
+          <h3 class="blog-title">ダミータイトルが入ります。記事の見出しをここに書きます</h3>
+          <p class="blog-excerpt">ダミーテキストです。ブログ記事の概要文をここに記載します。内容の要約が表示されます。</p>
+          <a href="#" class="blog-more">続きを読む →</a>
+        </div>
+      </article>
+      <article class="blog-card">
+        <div class="blog-img">
+          <img src="626828734217584644.jpg" alt="ブログ記事3">
+          <span class="blog-cat">イベント</span>
+        </div>
+        <div class="blog-body">
+          <time class="blog-date">2026.08.01</time>
+          <h3 class="blog-title">ダミータイトルが入ります。記事の見出しをここに書きます</h3>
+          <p class="blog-excerpt">ダミーテキストです。ブログ記事の概要文をここに記載します。内容の要約が表示されます。</p>
+          <a href="#" class="blog-more">続きを読む →</a>
+        </div>
+      </article>
+    </div>
+    <div style="text-align:center; margin-top:40px;">
+      <a href="#" class="btn-outline">記事一覧を見る</a>
+    </div>
+  </div>
+</section>
+
+<!-- 会社概要 -->
+<section id="company">
+  <div class="container">
+    <div class="section-header">
+      <span class="label">COMPANY</span>
+      <h2>会社概要</h2>
+    </div>
+    <table class="company-table">
+      <tr><th>会社名</th><td>ダミー株式会社</td></tr>
+      <tr><th>設立</th><td>2015年</td></tr>
+      <tr><th>代表取締役</th><td>ダミー 太郎</td></tr>
+      <tr><th>所在地</th><td>〒000-0000 ○○県○○市○○町0-0-0</td></tr>
+      <tr><th>TEL</th><td>000-0000-0000</td></tr>
+      <tr><th>事業内容</th><td>介護用品・食品・韓国食材の販売・流通</td></tr>
+      <tr><th>取扱店</th><td>キノクニヤ・阪急オアシス・マルエツ ほか</td></tr>
+      <tr><th>ウェブサイト</th><td><a href="#" style="color:var(--orange);">https://dummy-company.co.jp</a></td></tr>
+    </table>
+  </div>
+</section>
+
+<!-- フッター -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-info">
+      <div class="footer-logo">ダミー株式会社</div>
+      <p>ダミー株式会社<br>〒000-0000 ○○県○○市○○町0-0-0<br>TEL: 000-0000-0000</p>
+    </div>
+    <div class="footer-links">
+      <a href="#">メニューはいる</a>
+      <a href="#company">会社概要</a>
+      <a href="#open">メニューはいる</a>
+      <a href="#products">メニューはいる</a>
+      <a href="#kfood">メニューはいる</a>
+      <a href="#">メニューはいる</a>
+    </div>
+    <div class="footer-links">
+      <a href="#">プライバシーポリシー</a>
+      <a href="#">特定商取引法に基づく表示</a>
+      <a href="#">お問い合わせ</a>
+    </div>
+  </div>
+  <p class="footer-copy">© 2026 ダミー株式会社. All Rights Reserved.</p>
+</footer>
+
+<script>
+  const hamburger = document.getElementById('hamburger');
+  const nav = document.getElementById('mainNav');
+  hamburger.addEventListener('click', () => nav.classList.toggle('open'));
+
+  const navLinks = document.querySelectorAll('.main-nav a');
+  navLinks.forEach(link => {
+    link.addEventListener('click', function() {
+      navLinks.forEach(l => l.classList.remove('active'));
+      this.classList.add('active');
+      if (nav.classList.contains('open')) nav.classList.remove('open');
+    });
+  });
+
+  const sections = document.querySelectorAll('section[id]');
+  window.addEventListener('scroll', () => {
+    let current = '';
+    sections.forEach(s => { if (window.scrollY >= s.offsetTop - 90) current = s.getAttribute('id'); });
+    navLinks.forEach(link => {
+      link.classList.remove('active');
+      const href = link.getAttribute('href').replace(/.*#/, '');
+      if (href === current) link.classList.add('active');
+    });
+  });
+</script>
+
+</body>
+</html>

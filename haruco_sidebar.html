@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>株式会社HARUCO</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Hiragino Kaku Gothic ProN', 'Meiryo', sans-serif;
+      display: flex;
+      min-height: 100vh;
+      background: #f5f5f5;
+    }
+
+    /* ========== サイドバー ========== */
+    .sidebar {
+      width: 200px;
+      min-height: 100vh;
+      background: #ffffff;
+      border-right: 1px solid #e0e0e0;
+      display: flex;
+      flex-direction: column;
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 100;
+      box-shadow: 2px 0 8px rgba(0,0,0,0.08);
+    }
+
+    .sidebar-logo {
+      padding: 24px 16px 20px;
+      border-bottom: 2px solid #1a237e;
+      text-align: center;
+    }
+
+    .sidebar-logo span {
+      font-size: 22px;
+      font-weight: 700;
+      color: #1a237e;
+      letter-spacing: 2px;
+    }
+
+    .sidebar-logo small {
+      display: block;
+      font-size: 10px;
+      color: #888;
+      margin-top: 2px;
+      letter-spacing: 1px;
+    }
+
+    .sidebar nav {
+      flex: 1;
+      padding: 12px 0;
+    }
+
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 16px 8px;
+      cursor: pointer;
+      color: #1a237e;
+      text-decoration: none;
+      border-left: 4px solid transparent;
+      transition: all 0.2s ease;
+      position: relative;
+    }
+
+    .nav-item:hover,
+    .nav-item.active {
+      background: #e8eaf6;
+      border-left: 4px solid #1a237e;
+    }
+
+    .nav-item.active .nav-label {
+      font-weight: 700;
+    }
+
+    .nav-icon {
+      font-size: 28px;
+      margin-bottom: 6px;
+      line-height: 1;
+    }
+
+    .nav-label {
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.5px;
+      color: #1a237e;
+    }
+
+    .nav-divider {
+      height: 1px;
+      background: #e0e0e0;
+      margin: 4px 12px;
+    }
+
+    .sidebar-footer {
+      padding: 16px;
+      border-top: 1px solid #e0e0e0;
+      text-align: center;
+    }
+
+    .sidebar-footer p {
+      font-size: 9px;
+      color: #aaa;
+      line-height: 1.6;
+    }
+
+    /* ハンバーガーボタン（モバイル用） */
+    .hamburger {
+      display: none;
+      position: fixed;
+      top: 14px;
+      left: 14px;
+      z-index: 200;
+      background: #1a237e;
+      border: none;
+      border-radius: 8px;
+      width: 44px;
+      height: 44px;
+      cursor: pointer;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+    }
+
+    .hamburger span {
+      display: block;
+      width: 24px;
+      height: 2px;
+      background: #fff;
+      border-radius: 2px;
+      transition: all 0.3s;
+    }
+
+    .sidebar-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.4);
+      z-index: 99;
+    }
+
+    /* ========== レスポンシブ ========== */
+    @media (max-width: 768px) {
+      .sidebar {
+        transform: translateX(-100%);
+        transition: transform 0.3s ease;
+        z-index: 150;
+      }
+
+      .sidebar.open {
+        transform: translateX(0);
+      }
+
+      .main-content {
+        margin-left: 0;
+      }
+
+      .hamburger {
+        display: flex;
+      }
+
+      .sidebar-overlay.visible {
+        display: block;
+      }
+
+      .hero {
+        height: 300px;
+      }
+
+      .cards {
+        grid-template-columns: 1fr;
+      }
+
+      .section, .section-gray {
+        padding: 40px 20px;
+      }
+
+      .info-grid {
+        max-width: 100%;
+      }
+    }
+
+    /* ========== メインコンテンツ ========== */
+    .main-content {
+      margin-left: 200px;
+      flex: 1;
+      min-height: 100vh;
+    }
+
+    /* ヒーローセクション */
+    .hero {
+      position: relative;
+      background: #00bcd4;
+      height: 520px;
+      overflow: hidden;
+    }
+
+    .hero-bg-gradient {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, #00acc1 0%, #26c6da 40%, #80deea 100%);
+    }
+
+    /* 野菜の画像エリア（プレースホルダー） */
+    .hero-image-area {
+      position: absolute;
+      top: -30px;
+      left: 50%;
+      transform: translateX(-40%);
+      width: 900px;
+      height: 530px;
+      background:
+        radial-gradient(ellipse at 30% 40%, #e67e22 0%, transparent 25%),
+        radial-gradient(ellipse at 55% 30%, #d4ac0d 0%, transparent 20%),
+        radial-gradient(ellipse at 70% 50%, #f0f0e8 0%, transparent 22%),
+        radial-gradient(ellipse at 45% 55%, #c0392b 0%, transparent 18%),
+        radial-gradient(ellipse at 20% 60%, #f39c12 0%, transparent 22%),
+        radial-gradient(ellipse at 80% 35%, #ecf0f1 0%, transparent 20%),
+        radial-gradient(ellipse at 60% 65%, #f1c40f 0%, transparent 20%),
+        radial-gradient(ellipse at 85% 60%, #bdc3c7 0%, transparent 15%),
+        linear-gradient(180deg, #f0e6d3 0%, #e8d5b7 100%);
+      border-radius: 50% 50% 0 0 / 40% 40% 0 0;
+      opacity: 0.9;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .hero-image-label {
+      color: rgba(255,255,255,0.6);
+      font-size: 14px;
+      text-align: center;
+      margin-top: 180px;
+    }
+
+    /* 波形の下部 */
+    .hero-wave {
+      position: absolute;
+      bottom: -2px;
+      left: 0;
+      right: 0;
+    }
+
+    .hero-wave svg {
+      display: block;
+      width: 100%;
+    }
+
+    /* コンテンツセクション */
+    .section {
+      background: #fff;
+      padding: 60px 40px;
+    }
+
+    .section h2 {
+      font-size: 24px;
+      color: #1a237e;
+      margin-bottom: 16px;
+      border-bottom: 2px solid #00bcd4;
+      padding-bottom: 8px;
+    }
+
+    .section p {
+      color: #555;
+      line-height: 1.8;
+      font-size: 15px;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      margin-top: 32px;
+    }
+
+    .card {
+      background: #f8f9fa;
+      border-radius: 12px;
+      padding: 28px 20px;
+      text-align: center;
+      border: 1px solid #e0e0e0;
+      transition: box-shadow 0.2s;
+      cursor: pointer;
+    }
+
+    .card:hover {
+      box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+    }
+
+    .card .card-icon {
+      font-size: 40px;
+      margin-bottom: 12px;
+    }
+
+    .card h3 {
+      font-size: 16px;
+      color: #1a237e;
+      margin-bottom: 8px;
+    }
+
+    .card p {
+      font-size: 13px;
+      color: #777;
+    }
+
+    /* グレーセクション */
+    .section-gray {
+      background: #f0f4f8;
+      padding: 60px 40px;
+    }
+
+    .section-gray h2 {
+      font-size: 24px;
+      color: #1a237e;
+      margin-bottom: 24px;
+      border-bottom: 2px solid #00bcd4;
+      padding-bottom: 8px;
+    }
+
+    .info-grid {
+      display: grid;
+      grid-template-columns: 160px 1fr;
+      gap: 0;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      overflow: hidden;
+      background: #fff;
+      max-width: 640px;
+    }
+
+    .info-grid dt {
+      background: #e8eaf6;
+      color: #1a237e;
+      font-weight: 600;
+      font-size: 13px;
+      padding: 14px 16px;
+      border-bottom: 1px solid #ddd;
+    }
+
+    .info-grid dd {
+      padding: 14px 16px;
+      font-size: 13px;
+      color: #555;
+      border-bottom: 1px solid #ddd;
+    }
+
+    .info-grid dt:last-of-type,
+    .info-grid dd:last-of-type {
+      border-bottom: none;
+    }
+
+    /* フッター */
+    footer {
+      background: #1a237e;
+      color: #fff;
+      text-align: center;
+      padding: 24px;
+      font-size: 12px;
+      letter-spacing: 1px;
+    }
+
+    footer a {
+      color: #80deea;
+      text-decoration: none;
+      margin: 0 8px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ハンバーガーボタン（モバイル） -->
+  <button class="hamburger" id="hamburger" aria-label="メニュー">
+    <span></span><span></span><span></span>
+  </button>
+  <div class="sidebar-overlay" id="overlay"></div>
+
+  <!-- ===== サイドバー ===== -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <span>HARUCO</span>
+      <small>株式会社HARUCO</small>
+    </div>
+
+    <nav>
+      <a href="#" class="nav-item active">
+        <span class="nav-icon">🏠</span>
+        <span class="nav-label">ホーム</span>
+      </a>
+
+      <div class="nav-divider"></div>
+
+      <a href="#company" class="nav-item">
+        <span class="nav-icon">🏢</span>
+        <span class="nav-label">会社概要</span>
+      </a>
+
+      <div class="nav-divider"></div>
+
+      <a href="#kaigo" class="nav-item">
+        <span class="nav-icon">♿</span>
+        <span class="nav-label">介護用品</span>
+      </a>
+
+      <div class="nav-divider"></div>
+
+      <a href="#open" class="nav-item">
+        <span class="nav-icon">🍴</span>
+        <span class="nav-label">オープン</span>
+      </a>
+
+      <div class="nav-divider"></div>
+
+      <a href="#jungnammi" class="nav-item">
+        <span class="nav-icon">☕</span>
+        <span class="nav-label">JUNGNAMMI</span>
+      </a>
+
+      <div class="nav-divider"></div>
+
+      <a href="#kfood" class="nav-item">
+        <span class="nav-icon">🌶️</span>
+        <span class="nav-label">K-FOOD</span>
+      </a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <p>© 2024<br>株式会社HARUCO</p>
+    </div>
+  </aside>
+
+  <!-- ===== メインコンテンツ ===== -->
+  <main class="main-content">
+
+    <!-- ヒーローセクション -->
+    <section class="hero">
+      <div class="hero-bg-gradient"></div>
+      <div class="hero-image-area">
+        <p class="hero-image-label">野菜・食品イメージ</p>
+      </div>
+      <div class="hero-wave">
+        <svg viewBox="0 0 1440 100" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+          <path d="M0,60 C240,100 480,20 720,60 C960,100 1200,20 1440,60 L1440,100 L0,100 Z"
+                fill="#ffffff" opacity="0.6"/>
+          <path d="M0,80 C360,40 720,100 1080,60 C1260,40 1380,70 1440,80 L1440,100 L0,100 Z"
+                fill="#ffffff"/>
+        </svg>
+      </div>
+    </section>
+
+    <!-- 商品・サービス紹介 -->
+    <section class="section" id="open">
+      <h2>商品・サービス</h2>
+      <p>株式会社HARUCOは、介護用品・食品・韓国食材など幅広い商品を取り揃えています。</p>
+      <div class="cards">
+        <div class="card">
+          <div class="card-icon">♿</div>
+          <h3>介護用品</h3>
+          <p>リモコンリフト式移動椅子など、介護・福祉商品を豊富に取り揃えています。</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">🍽️</div>
+          <h3>オープン</h3>
+          <p>業務用対応の食品・飲食サービス商品をご提供しています。</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">🌶️</div>
+          <h3>K-FOOD</h3>
+          <p>本場韓国の食材・食品を厳選してお届けします。</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 会社概要 -->
+    <section class="section-gray" id="company">
+      <h2>会社概要</h2>
+      <dl class="info-grid">
+        <dt>会社名</dt>
+        <dd>株式会社HARUCO</dd>
+        <dt>設立</dt>
+        <dd>2015年</dd>
+        <dt>事業内容</dt>
+        <dd>介護用品・食品・韓国食材の販売・流通</dd>
+        <dt>ウェブサイト</dt>
+        <dd><a href="https://haruco.co.jp" style="color:#1a237e;">https://haruco.co.jp</a></dd>
+      </dl>
+    </section>
+
+    <!-- JUNGNAMMI -->
+    <section class="section" id="jungnammi">
+      <h2>JUNGNAMMI</h2>
+      <p>こだわりの韓国コーヒー・飲料ブランド「JUNGNAMMI」。本場の味をお届けします。</p>
+    </section>
+
+    <!-- K-FOOD -->
+    <section class="section-gray" id="kfood">
+      <h2>K-FOOD</h2>
+      <p>韓国の本格食材・食品を直輸入でご提供。キノクニヤ・阪急オアシス・マルエツなどの大手スーパーでもお取り扱いいただいています。</p>
+    </section>
+
+    <footer>
+      <p>© 2024 株式会社HARUCO &nbsp;|&nbsp;
+        <a href="#">ホーム</a>
+        <a href="#">会社概要</a>
+        <a href="#">介護用品</a>
+        <a href="#">プライバシーポリシー</a>
+      </p>
+    </footer>
+
+  </main>
+
+  <script>
+    // サイドバーのナビ：クリックでアクティブ切り替え
+    const navItems = document.querySelectorAll('.nav-item');
+    navItems.forEach(item => {
+      item.addEventListener('click', function() {
+        navItems.forEach(n => n.classList.remove('active'));
+        this.classList.add('active');
+        // モバイル：クリック後に閉じる
+        if (window.innerWidth <= 768) closeSidebar();
+      });
+    });
+
+    // ハンバーガー開閉
+    const sidebar = document.querySelector('.sidebar');
+    const overlay = document.getElementById('overlay');
+    const hamburger = document.getElementById('hamburger');
+
+    function openSidebar() {
+      sidebar.classList.add('open');
+      overlay.classList.add('visible');
+    }
+    function closeSidebar() {
+      sidebar.classList.remove('open');
+      overlay.classList.remove('visible');
+    }
+
+    hamburger.addEventListener('click', () => {
+      sidebar.classList.contains('open') ? closeSidebar() : openSidebar();
+    });
+    overlay.addEventListener('click', closeSidebar);
+  </script>
+
+</body>
+</html>
