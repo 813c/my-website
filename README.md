@@ -1,0 +1,1 @@
+/Users/watanabetokukou/Library/Application Support/Claude/local-agent-mode-sessions/36632b44-7699-4dd1-98e0-0bea2c1de2fe/fcb94de7-280b-48f3-a811-0aa16be07d4f/local_e3c60372-efdd-4f33-bbcb-0ab757a33991/outputs/
